@@ -1,5 +1,7 @@
 'use strict';
 
+import './popup.css'; // ビルド時に読み込まれるのはここ
+
 (function () {
   function writeTime() {
     const realTime = new Date();
