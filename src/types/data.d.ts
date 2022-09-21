@@ -51,6 +51,7 @@ export type calendarApiResponseItem = {
   visibility: string;
   iCalUID: string;
   sequence: string;
+  hangoutLink?: string;
   attendees: Array<{
     email: string;
     self: boolean;
