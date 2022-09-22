@@ -8,8 +8,17 @@ import { useDate } from './util/dateUtil';
   /**
    * 現在時刻を取得してDOMの書き換えを行う
    */
-  const writeTime = () => {
-    const text = useDate().dateFormat(new Date());
+  const writeTime = async () => {
+    const storage = await chrome.storage.local.get();
+    const items = await storage.items;
+
+    if (items.length == 0) {
+      return;
+    }
+    const latestEventStartDate = items[0].start.dateTime;
+    const text = useDate().getDiff(
+      useDate().stringToDate(latestEventStartDate)
+    );
     document.getElementById('real-time')!.innerHTML = text;
   };
 
@@ -70,39 +79,9 @@ import { useDate } from './util/dateUtil';
     );
   };
 
-  const apiRequest = (accessToken: string): Promise<calendarApiResponse> => {
-    const params = {
-      maxResults: '5',
-      singleEvents: 'true',
-      orderBy: 'startTime',
-      timeMin: useDate().now(),
-      timeMax: useDate().endOfToday(),
-    };
-
-    const queryParams = new URLSearchParams(params);
-    return fetch(`${process.env.CALENDAR_API_URL}?${queryParams}`, {
-      method: 'GET',
-      headers: {
-        Authorization: 'Bearer ' + accessToken,
-        Accept: 'application/json',
-        'Content-Type': 'application/json;charset=utf-8',
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw Error();
-        }
-        return response.json();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
   async function createCalendarTable() {
     const storage = await chrome.storage.local.get();
-    const calendarEvents = await apiRequest(storage.accessToken);
-    const items = await calendarEvents.items;
+    const items = await storage.items;
 
     // 予定が見つからなかった場合
     if (items.length == 0) return;
@@ -134,7 +113,6 @@ import { useDate } from './util/dateUtil';
         event.start.dateTime
       );
       row_2_data_2.innerHTML = event.summary;
-      // row_2_data_3.innerHTML = '<a>' + event.hangoutLink + '</a>';
       const aTag = document.createElement('a');
       aTag.href = event.hangoutLink ? event.hangoutLink : '';
       aTag.target = '_blank'; // 別タブで開かせる
@@ -147,8 +125,32 @@ import { useDate } from './util/dateUtil';
       row_2.appendChild(row_2_data_3);
       tbodyElement.appendChild(row_2);
     }
+    const table = document.getElementById('table')!;
+
+    // テーブルの子要素を全て削除する
+    while (table.lastChild) {
+      table.removeChild(table.lastChild);
+    }
     document.getElementById('table')!.appendChild(tableElement);
   }
+
+  chrome.runtime.sendMessage({ type: 'FETCH_CALENDAR' }, (response) => {});
+
+  // chrome.alarms.clearAll();
+  chrome.alarms.create('FETCH_CALENDAR', {
+    delayInMinutes: 1,
+    periodInMinutes: 1,
+  });
+
+  chrome.alarms.onAlarm.addListener(function (alarm) {
+    if (alarm.name == 'FETCH_CALENDAR') {
+      chrome.runtime.sendMessage({ type: 'FETCH_CALENDAR' }, (response) => {});
+    }
+  });
+
+  chrome.storage.onChanged.addListener(() => {
+    createCalendarTable();
+  });
 
   document.getElementById('btn')!.addEventListener('click', async () => {
     chrome.storage.local.get('accessToken', (items) => {
@@ -159,9 +161,10 @@ import { useDate } from './util/dateUtil';
   });
 
   window.onload = () => {
+    writeTime();
     auth();
-    createCalendarTable();
-    //1秒ごとに関数を実行
+    // createCalendarTable();
+    //1分ごとに関数を実行
     setInterval(writeTime, 1000);
   };
 })();
