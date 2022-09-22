@@ -27,7 +27,7 @@ export const useDate = () => {
     const date = new Date(str);
     const hour = date.getHours();
     const minutes =
-      date.getMinutes() > 10 ? date.getMinutes() : '0' + date.getMinutes();
+      date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes();
     return hour + ':' + minutes;
   };
 
@@ -37,11 +37,12 @@ export const useDate = () => {
    * @param date 日付オブジェクト
    */
   const dateFormat = (date: Date): string => {
-    const hour = date.getHours() > 10 ? date.getHours() : '0' + date.getHours();
+    const hour =
+      date.getHours() >= 10 ? date.getHours() : '0' + date.getHours();
     const minutes =
-      date.getMinutes() > 10 ? date.getMinutes() : '0' + date.getMinutes();
+      date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes();
     const seconds =
-      date.getSeconds() > 10 ? date.getSeconds() : '0' + date.getSeconds();
+      date.getSeconds() >= 10 ? date.getSeconds() : '0' + date.getSeconds();
     return hour + ':' + minutes + ':' + seconds;
   };
 
