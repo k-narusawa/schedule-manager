@@ -136,7 +136,6 @@ import { useDate } from './util/dateUtil';
 
   chrome.runtime.sendMessage({ type: 'FETCH_CALENDAR' }, (response) => {});
 
-  // chrome.alarms.clearAll();
   chrome.alarms.create('FETCH_CALENDAR', {
     delayInMinutes: 1,
     periodInMinutes: 1,
