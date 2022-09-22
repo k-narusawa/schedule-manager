@@ -56,11 +56,31 @@ export const useDate = () => {
     return new Date(date);
   };
 
+  /**
+   * 現在時刻との差分を取得
+   */
+  const getDiff = (date: Date): string => {
+    const now = new Date();
+    const diff = date.getTime() - now.getTime();
+    const diffSec = Math.floor(diff / 1000);
+    const hour =
+      Math.floor(diffSec / 3600) >= 10
+        ? Math.floor(diffSec / 3600)
+        : '0' + Math.floor(diffSec / 3600);
+    const min =
+      Math.floor((diffSec % 3600) / 60) >= 10
+        ? Math.floor((diffSec % 3600) / 60)
+        : '0' + Math.floor((diffSec % 3600) / 60);
+    const sec = diffSec % 60 >= 10 ? diffSec % 60 : '0' + (diffSec % 60);
+    return hour + ':' + min + ':' + sec;
+  };
+
   return {
     now,
     endOfToday,
     dateFormat,
     extractTimeFormat,
     stringToDate,
+    getDiff,
   };
 };
