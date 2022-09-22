@@ -1,25 +1,22 @@
 'use strict';
 
 import './popup.css'; // ビルド時に読み込まれるのはここ
-import { calendarApiResponse, calendarEvent } from './types';
+import { calendarApiResponse } from './types';
+import { useDate } from './util/dateUtil';
 
 (function () {
   /**
    * 現在時刻を取得してDOMの書き換えを行う
    */
-  function writeTime() {
-    const realTime = new Date();
-    const hour = realTime.getHours();
-    const minutes = realTime.getMinutes();
-    const seconds = realTime.getSeconds();
-    const text = hour + ':' + minutes + ':' + seconds;
+  const writeTime = () => {
+    const text = useDate().dateFormat(new Date());
     document.getElementById('real-time')!.innerHTML = text;
-  }
+  };
 
   /**
    * OAuth認証を行う
    */
-  function auth() {
+  const auth = () => {
     const clientId = process.env.CLIENT_ID;
     const clientSecret = process.env.CLIENT_SECRET;
     const redirectUri = process.env.REDIRECT_URI;
@@ -71,11 +68,15 @@ import { calendarApiResponse, calendarEvent } from './types';
           });
       }
     );
-  }
+  };
 
   const apiRequest = (accessToken: string): Promise<calendarApiResponse> => {
     const params = {
       maxResults: '5',
+      singleEvents: 'true',
+      orderBy: 'startTime',
+      timeMin: useDate().now(),
+      timeMax: useDate().endOfToday(),
     };
 
     const queryParams = new URLSearchParams(params);
@@ -116,23 +117,31 @@ import { calendarApiResponse, calendarEvent } from './types';
     const heading_1 = document.createElement('th');
     const heading_2 = document.createElement('th');
     const heading_3 = document.createElement('th');
-    heading_1.innerHTML = 'タイトル';
-    heading_2.innerHTML = '開始';
-    heading_3.innerHTML = '終了';
+    heading_1.innerHTML = '開始';
+    heading_2.innerHTML = 'タイトル';
+    heading_3.innerHTML = 'MeetUrl';
     row_1.appendChild(heading_1);
     row_1.appendChild(heading_2);
     row_1.appendChild(heading_3);
     theadElement.appendChild(row_1);
 
-    const rows = [];
-    for (const [index, event] of items.entries()) {
+    for (const event of items) {
       const row_2 = document.createElement('tr');
       const row_2_data_1 = document.createElement('td');
       const row_2_data_2 = document.createElement('td');
       const row_2_data_3 = document.createElement('td');
-      row_2_data_1.innerHTML = event.summary;
-      row_2_data_2.innerHTML = event.start.dateTime;
-      row_2_data_3.innerHTML = event.end.dateTime;
+      row_2_data_1.innerHTML = useDate().extractTimeFormat(
+        event.start.dateTime
+      );
+      row_2_data_2.innerHTML = event.summary;
+      // row_2_data_3.innerHTML = '<a>' + event.hangoutLink + '</a>';
+      const aTag = document.createElement('a');
+      aTag.href = event.hangoutLink ? event.hangoutLink : '';
+      aTag.target = '_blank'; // 別タブで開かせる
+      aTag.appendChild(
+        document.createTextNode(event.hangoutLink ? event.hangoutLink : '')
+      );
+      row_2_data_3.appendChild(aTag);
       row_2.appendChild(row_2_data_1);
       row_2.appendChild(row_2_data_2);
       row_2.appendChild(row_2_data_3);
