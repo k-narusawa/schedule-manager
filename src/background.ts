@@ -1,21 +1,52 @@
 'use strict';
 
-// With background scripts you can communicate with popup
-// and contentScript files.
-// For more information on background script,
-// See https://developer.chrome.com/extensions/background_pages
+import { calendarApiResponse } from './types';
+import { useDate } from './util/dateUtil';
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === 'GREETINGS') {
-    const message: string = `Hi ${
-      sender.tab ? 'Con' : 'Pop'
-    }, my name is Bac. I am from Background. It's great to hear from you.`;
-
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+  if (request.type === 'FETCH_CALENDAR') {
     // Log message coming from the `request` parameter
-    console.log(request.payload.message);
+    console.log(request.type);
+    const storage = await chrome.storage.local.get();
+    const calendarEvents = await apiRequest(storage.accessToken);
+    const items = await calendarEvents.items;
+
+    chrome.storage.local.set({
+      items: items,
+    });
+
     // Send a response message
     sendResponse({
-      message,
+      a: 'a',
     });
   }
 });
+
+const apiRequest = (accessToken: string): Promise<calendarApiResponse> => {
+  const params = {
+    maxResults: '5',
+    singleEvents: 'true',
+    orderBy: 'startTime',
+    timeMin: useDate().now(),
+    timeMax: useDate().endOfToday(),
+  };
+
+  const queryParams = new URLSearchParams(params);
+  return fetch(`${process.env.CALENDAR_API_URL}?${queryParams}`, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + accessToken,
+      Accept: 'application/json',
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw Error();
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
