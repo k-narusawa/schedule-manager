@@ -36,6 +36,7 @@ header {
 }
 
 main {
+  width: 100%;
   margin: 0;
   padding: 0;
 }
@@ -49,6 +50,48 @@ main {
   margin: auto auto auto 10px;
 }
 
-.table {
-  background-color: gray;
+table {
+  width: 100%;
+  table-layout: fixed;
+  word-wrap: break-word;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+table thead {
+  width: 100%;
+  background-color: azure;
+}
+
+table tr {
+  border-bottom: solid 1px #eee;
+}
+
+table .start-time {
+  width: 20%;
+}
+
+table .title {
+  width: 60%;
+}
+
+table .hang-out {
+  width: 20%;
+}
+
+table tbody {
+  font-size: 24px;
+}
+
+table tbody .start-time-data {
+  font-size: inherit;
+  color: #dcdcdc;
+}
+
+table tbody .title-data {
+  font-size: 18px;
+}
+
+table tbody .note-data {
+  font-size: 16px;
 }

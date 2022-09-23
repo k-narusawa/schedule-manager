@@ -92,38 +92,47 @@ import { useDate } from './util/dateUtil';
     tableElement.appendChild(theadElement);
     tableElement.appendChild(tbodyElement);
 
-    const row_1 = document.createElement('tr');
-    const heading_1 = document.createElement('th');
-    const heading_2 = document.createElement('th');
-    const heading_3 = document.createElement('th');
-    heading_1.innerHTML = '開始';
-    heading_2.innerHTML = 'タイトル';
-    heading_3.innerHTML = 'MeetUrl';
-    row_1.appendChild(heading_1);
-    row_1.appendChild(heading_2);
-    row_1.appendChild(heading_3);
-    theadElement.appendChild(row_1);
+    const header = document.createElement('tr');
+    const startTimeColumn = document.createElement('th');
+    const titleColumn = document.createElement('th');
+    const noteColumn = document.createElement('th');
+    startTimeColumn.innerHTML = '開始';
+    titleColumn.innerHTML = 'タイトル';
+    noteColumn.innerHTML = '備考';
+    startTimeColumn.className = 'start-time';
+    titleColumn.className = 'title';
+    noteColumn.className = 'hang-out';
+    header.appendChild(startTimeColumn);
+    header.appendChild(titleColumn);
+    header.appendChild(noteColumn);
+    theadElement.appendChild(header);
 
     for (const event of items) {
-      const row_2 = document.createElement('tr');
-      const row_2_data_1 = document.createElement('td');
-      const row_2_data_2 = document.createElement('td');
-      const row_2_data_3 = document.createElement('td');
-      row_2_data_1.innerHTML = useDate().extractTimeFormat(
+      const main = document.createElement('tr');
+      const startTimeColumnData = document.createElement('td');
+      const titleColumnData = document.createElement('td');
+      const noteColumnData = document.createElement('td');
+
+      startTimeColumnData.innerHTML = useDate().extractTimeFormat(
         event.start.dateTime
       );
-      row_2_data_2.innerHTML = event.summary;
+      titleColumnData.innerHTML = event.summary;
       const aTag = document.createElement('a');
       aTag.href = event.hangoutLink ? event.hangoutLink : '';
       aTag.target = '_blank'; // 別タブで開かせる
       aTag.appendChild(
-        document.createTextNode(event.hangoutLink ? event.hangoutLink : '')
+        document.createTextNode(event.hangoutLink ? 'Meet' : '')
       );
-      row_2_data_3.appendChild(aTag);
-      row_2.appendChild(row_2_data_1);
-      row_2.appendChild(row_2_data_2);
-      row_2.appendChild(row_2_data_3);
-      tbodyElement.appendChild(row_2);
+      noteColumnData.appendChild(aTag);
+
+      startTimeColumnData.className = 'start-time-data';
+      titleColumnData.className = 'title-data';
+      noteColumnData.className = 'note-data';
+
+      main.appendChild(startTimeColumnData);
+      main.appendChild(titleColumnData);
+      main.appendChild(noteColumnData);
+      tbodyElement.appendChild(main);
     }
     const table = document.getElementById('table')!;
 
