@@ -7,10 +7,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.type === 'FETCH_CALENDAR') {
     const storage = await chrome.storage.local.get();
     const calendarEvents = await apiRequest(storage.accessToken);
-
     const items = await calendarEvents.items;
 
-    if (!items || items.length == 0) return;
+    if (items && items.length == 0) return;
 
     chrome.storage.local.set({
       items: items,

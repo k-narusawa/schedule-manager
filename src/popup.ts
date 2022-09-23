@@ -12,7 +12,7 @@ import { calendarApiResponseItem } from './types';
     const storage = await chrome.storage.local.get();
     const items = await storage.items;
 
-    if (!items || items.length == 0) return;
+    if (items && items.length == 0) return;
 
     const latestEventStartDate = items[0].start.dateTime;
     const text = useDate().getDiff(
@@ -46,7 +46,7 @@ import { calendarApiResponseItem } from './types';
         interactive: true,
       },
       (responseUrl) => {
-        if (!responseUrl) throw Error('error');
+        if (responseUrl == undefined) throw Error('エラー');
 
         const url = new URL(responseUrl);
         const code = url.searchParams.get('code');
@@ -107,7 +107,7 @@ import { calendarApiResponseItem } from './types';
     const items: Array<calendarApiResponseItem> = await storage.items;
 
     // 予定が見つからなかった場合
-    if (items.length == 0) return;
+    if (items && items.length == 0) return;
 
     const tableElement = document.createElement('table');
     const theadElement = document.createElement('thead');
@@ -170,7 +170,6 @@ import { calendarApiResponseItem } from './types';
     document.getElementById('table')!.appendChild(tableElement);
   };
 
-  // 静的HTMLの生成
   createHTML();
 
   // 認証フローを実行
