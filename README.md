@@ -1,20 +1,26 @@
 # Schedule Manager
 
-## 開発手順
+## install
 
-- 以下のコマンドで build を行う
+```sh
+npm install
+```
+
+## build
 
 ```sh
 npm run build
 ```
 
-- [Chrome 拡張機能](chrome://extensions)からデベロッパーモードにし`てパッケージ化されていない買う超機能を読み込む`で成果物(`build`フォルダ配下)を選択することによって動作を確認できる
-
-- また、以下のコマンドでコンパイルしながら動作の確認を行うこともできる
+## watch
 
 ```sh
 npm run watch
 ```
+
+## 拡張機能の読み込み
+
+- [Chrome 拡張機能](chrome://extensions)からデベロッパーモードにし`てパッケージ化されていない買う超機能を読み込む`で成果物(`build`フォルダ配下)を選択することによって動作を確認できる
 
 ## 機能
 
