@@ -116,14 +116,18 @@ import { useDate } from './util/dateUtil';
       startTimeColumnData.innerHTML = useDate().extractTimeFormat(
         event.start.dateTime
       );
-      titleColumnData.innerHTML = event.summary;
-      const aTag = document.createElement('a');
-      aTag.href = event.hangoutLink ? event.hangoutLink : '';
-      aTag.target = '_blank'; // 別タブで開かせる
-      aTag.appendChild(
+      const titleATag = document.createElement('a');
+      titleATag.href = event.htmlLink ? event.htmlLink : '';
+      titleATag.target = '_blank'; // 別タブで開かせる
+      titleATag.appendChild(document.createTextNode(event.summary));
+      titleColumnData.appendChild(titleATag);
+      const noteATag = document.createElement('a');
+      noteATag.href = event.hangoutLink ? event.hangoutLink : '';
+      noteATag.target = '_blank'; // 別タブで開かせる
+      noteATag.appendChild(
         document.createTextNode(event.hangoutLink ? 'Meet' : '')
       );
-      noteColumnData.appendChild(aTag);
+      noteColumnData.appendChild(noteATag);
 
       startTimeColumnData.className = 'start-time-data';
       titleColumnData.className = 'title-data';
