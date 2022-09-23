@@ -5,19 +5,15 @@ import { useDate } from './util/dateUtil';
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.type === 'FETCH_CALENDAR') {
-    // Log message coming from the `request` parameter
-    console.log(request.type);
     const storage = await chrome.storage.local.get();
     const calendarEvents = await apiRequest(storage.accessToken);
+
     const items = await calendarEvents.items;
+
+    if (!items || items.length == 0) return;
 
     chrome.storage.local.set({
       items: items,
-    });
-
-    // Send a response message
-    sendResponse({
-      a: 'a',
     });
   }
 });

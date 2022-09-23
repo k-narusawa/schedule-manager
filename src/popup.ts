@@ -2,6 +2,7 @@
 
 import './popup.css'; // ビルド時に読み込まれるのはここ
 import { useDate } from './util/dateUtil';
+import { calendarApiResponseItem } from './types';
 
 (function () {
   /**
@@ -11,9 +12,8 @@ import { useDate } from './util/dateUtil';
     const storage = await chrome.storage.local.get();
     const items = await storage.items;
 
-    if (items.length == 0) {
-      return;
-    }
+    if (!items || items.length == 0) return;
+
     const latestEventStartDate = items[0].start.dateTime;
     const text = useDate().getDiff(
       useDate().stringToDate(latestEventStartDate)
@@ -24,7 +24,7 @@ import { useDate } from './util/dateUtil';
   /**
    * OAuth認証を行う
    */
-  const auth = () => {
+  const auth = async () => {
     const clientId = process.env.CLIENT_ID;
     const clientSecret = process.env.CLIENT_SECRET;
     const redirectUri = process.env.REDIRECT_URI;
@@ -46,7 +46,7 @@ import { useDate } from './util/dateUtil';
         interactive: true,
       },
       (responseUrl) => {
-        if (responseUrl == undefined) throw Error('エラー');
+        if (!responseUrl) throw Error('error');
 
         const url = new URL(responseUrl);
         const code = url.searchParams.get('code');
@@ -104,7 +104,7 @@ import { useDate } from './util/dateUtil';
    */
   const createCalendarTable = async () => {
     const storage = await chrome.storage.local.get();
-    const items = await storage.items;
+    const items: Array<calendarApiResponseItem> = await storage.items;
 
     // 予定が見つからなかった場合
     if (items.length == 0) return;
@@ -170,6 +170,7 @@ import { useDate } from './util/dateUtil';
     document.getElementById('table')!.appendChild(tableElement);
   };
 
+  // 静的HTMLの生成
   createHTML();
 
   // 認証フローを実行
@@ -192,8 +193,10 @@ import { useDate } from './util/dateUtil';
   });
 
   // バックグラウンドで書き換えられたカレンダーの状態を監視
-  chrome.storage.onChanged.addListener(() => {
-    createCalendarTable();
+  chrome.storage.onChanged.addListener((changes: any, areaName: string) => {
+    if (changes.items) {
+      createCalendarTable();
+    }
   });
 
   // リロードボタンの押下を検知
