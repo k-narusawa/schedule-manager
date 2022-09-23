@@ -15,9 +15,7 @@ const config = (env, argv) =>
       contentScript: PATHS.src + '/contentScript.ts',
       background: PATHS.src + '/background.ts',
     },
-    plugins: [
-      new Dotenv()
-    ],
+    plugins: [new Dotenv()],
     devtool: argv.mode === 'production' ? false : 'source-map',
   });
 

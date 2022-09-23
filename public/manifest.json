@@ -16,11 +16,7 @@
     "default_title": "Schedule Watcher",
     "default_popup": "popup.html"
   },
-  "permissions": [
-    "storage",
-    "identity",
-    "alarms"
-  ],
+  "permissions": ["storage", "identity", "alarms"],
   "options_page": "options.html",
   "default_locale": "en"
 }
