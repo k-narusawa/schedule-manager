@@ -7,7 +7,7 @@ import './options.css'; // ビルド時に読み込まれるのはここ
     // ヘッダ部分の生成
     const subjectDiv = document.getElementById('subject')!;
     const subject = document.createElement('p');
-    subject.innerText = chrome.i18n.getMessage('header_subject');
+    subject.innerText = chrome.i18n.getMessage('application_name');
     subjectDiv.appendChild(subject);
 
     // input部分の生成
@@ -15,7 +15,8 @@ import './options.css'; // ビルド時に読み込まれるのはここ
 
     const fetchSizeInputLabel = document.createElement('label');
     fetchSizeInputLabel.htmlFor = 'fetch-size-input';
-    fetchSizeInputLabel.innerText = '予定取得数';
+    fetchSizeInputLabel.innerText =
+      chrome.i18n.getMessage('options_fetch_size');
     const fetchSizeInput = document.createElement('input');
     fetchSizeInput.id = 'fetch-size-input';
     fetchSizeInput.className = 'fetch-size-input';

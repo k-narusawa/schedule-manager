@@ -1,4 +1,15 @@
 {
+  "application_name": {
+    "message": "Schedule Manager For Google Calendar"
+  },
+  "application_description": {
+    "message": "Schedule Manager For Google Calendar"
+  },
+
+  "save": {
+    "message": "save"
+  },
+
   "header_subject": {
     "message": "List of Today's Schedule"
   },
@@ -13,5 +24,9 @@
   },
   "table_header_note": {
     "message": "NOTE"
+  },
+
+  "options_fetch_size": {
+    "message" : "Number of Appointment : "
   }
 }

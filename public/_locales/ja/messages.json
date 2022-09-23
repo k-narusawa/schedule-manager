@@ -1,4 +1,15 @@
 {
+  "application_name": {
+    "message": "Schedule Manager For Google Calendar"
+  },
+  "application_description": {
+    "message": "Googleカレンダーに登録されている予定をシンプルに確認できます"
+  },
+
+  "save": {
+    "message": "保存"
+  },
+
   "header_subject": {
     "message": "本日の予定一覧"
   },
@@ -13,5 +24,9 @@
   },
   "table_header_note": {
     "message": "備考"
+  },
+
+  "options_fetch_size": {
+    "message" : "予定取得数 : "
   }
 }
