@@ -1,0 +1,48 @@
+/* 全体の設定 */
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  vertical-align: middle;
+}
+
+/* ヘッダ領域の設定 */
+header {
+  width: 100%;
+  padding: 0;
+}
+
+.header-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #e6e6fa;
+}
+
+.header-wrapper .subject {
+  font-size: large;
+  font-weight: bolder;
+  margin-left: 10px;
+}
+
+.header-wrapper .navi {
+  display: flex;
+  margin: auto 10px auto auto;
+  list-style-type: none;
+}
+
+.header-wrapper .navi .material-icons {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.options-form input {
+  font: 15px/24px sans-serif;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 8px 0;
+  padding: 0.3em;
+  transition: 0.3s;
+  border: 1px solid #1b2538;
+  border-radius: 4px;
+  outline: none;
+}

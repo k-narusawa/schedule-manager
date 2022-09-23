@@ -16,5 +16,6 @@
     "identity",
     "alarms"
   ],
+  "options_page": "options.html",
   "default_locale": "en"
 }
