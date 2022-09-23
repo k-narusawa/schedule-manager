@@ -3,7 +3,7 @@
     "message": "Schedule Manager For Google Calendar"
   },
   "application_description": {
-    "message": "Googleカレンダーに登録されている予定をシンプルに確認できます"
+    "message": "Googleカレンダーに登録されている予定を確認できます。また、HangOutのURLに直接アクセスすることもできます。"
   },
 
   "save": {
