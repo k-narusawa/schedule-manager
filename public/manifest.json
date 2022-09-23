@@ -15,5 +15,6 @@
     "tabs",
     "identity",
     "alarms"
-  ]
+  ],
+  "default_locale": "en"
 }

@@ -9,18 +9,14 @@
   <body>
     <header>
       <div class="header-wrapper">
-        <div class="subject">
-          <p>本日の予定一覧</p>
-        </div>
+        <div id="subject" class="subject"> </div>
         <ul class="navi">
           <li><a id="reload"><span class="material-icons">cached</span></a></li>
         </ul>
       </div>
     </header>
     <main>
-      <div class="next-schedule">
-        <p>次の予定まで: <span id="real-time"></span></p>
-      </div>
+      <div id="next-schedule" class="next-schedule"></div>
       <div id="table"></div>
     </main>
     <script src="popup.js"></script>

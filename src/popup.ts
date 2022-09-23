@@ -1,12 +1,11 @@
 'use strict';
 
 import './popup.css'; // ビルド時に読み込まれるのはここ
-import { calendarApiResponse } from './types';
 import { useDate } from './util/dateUtil';
 
 (function () {
   /**
-   * 現在時刻を取得してDOMの書き換えを行う
+   * 次の予定までの時刻を計算してHTMLを書き換える
    */
   const writeTime = async () => {
     const storage = await chrome.storage.local.get();
@@ -79,7 +78,31 @@ import { useDate } from './util/dateUtil';
     );
   };
 
-  async function createCalendarTable() {
+  /**
+   * 静的なHTMLを生成
+   */
+  const createHTML = () => {
+    // ヘッダ部分の生成
+    const subjectDiv = document.getElementById('subject')!;
+    const subject = document.createElement('p');
+    subject.innerText = chrome.i18n.getMessage('header_subject');
+    subjectDiv.appendChild(subject);
+
+    // next-schedule部分の生成
+    const nextScheduleDiv = document.getElementById('next-schedule')!;
+    const nextSchedule = document.createElement('p');
+    nextSchedule.innerText = chrome.i18n.getMessage('main_next_appointment');
+    const realTimeSpan = document.createElement('span');
+    realTimeSpan.id = 'real-time';
+    nextSchedule.appendChild(realTimeSpan);
+    nextScheduleDiv.appendChild(nextSchedule);
+  };
+
+  /**
+   * カレンダーのレンダリングを実行
+   * @returns
+   */
+  const createCalendarTable = async () => {
     const storage = await chrome.storage.local.get();
     const items = await storage.items;
 
@@ -94,23 +117,23 @@ import { useDate } from './util/dateUtil';
 
     const header = document.createElement('tr');
     const startTimeColumn = document.createElement('th');
-    const titleColumn = document.createElement('th');
+    const summaryColumn = document.createElement('th');
     const noteColumn = document.createElement('th');
-    startTimeColumn.innerHTML = '開始';
-    titleColumn.innerHTML = 'タイトル';
-    noteColumn.innerHTML = '備考';
+    startTimeColumn.innerHTML = chrome.i18n.getMessage('table_header_start');
+    summaryColumn.innerHTML = chrome.i18n.getMessage('table_header_summary');
+    noteColumn.innerHTML = chrome.i18n.getMessage('table_header_note');
     startTimeColumn.className = 'start-time';
-    titleColumn.className = 'title';
+    summaryColumn.className = 'title';
     noteColumn.className = 'hang-out';
     header.appendChild(startTimeColumn);
-    header.appendChild(titleColumn);
+    header.appendChild(summaryColumn);
     header.appendChild(noteColumn);
     theadElement.appendChild(header);
 
     for (const event of items) {
       const main = document.createElement('tr');
       const startTimeColumnData = document.createElement('td');
-      const titleColumnData = document.createElement('td');
+      const summaryColumnData = document.createElement('td');
       const noteColumnData = document.createElement('td');
 
       startTimeColumnData.innerHTML = useDate().extractTimeFormat(
@@ -120,7 +143,7 @@ import { useDate } from './util/dateUtil';
       titleATag.href = event.htmlLink ? event.htmlLink : '';
       titleATag.target = '_blank'; // 別タブで開かせる
       titleATag.appendChild(document.createTextNode(event.summary));
-      titleColumnData.appendChild(titleATag);
+      summaryColumnData.appendChild(titleATag);
       const noteATag = document.createElement('a');
       noteATag.href = event.hangoutLink ? event.hangoutLink : '';
       noteATag.target = '_blank'; // 別タブで開かせる
@@ -130,11 +153,11 @@ import { useDate } from './util/dateUtil';
       noteColumnData.appendChild(noteATag);
 
       startTimeColumnData.className = 'start-time-data';
-      titleColumnData.className = 'title-data';
+      summaryColumnData.className = 'summary-data';
       noteColumnData.className = 'note-data';
 
       main.appendChild(startTimeColumnData);
-      main.appendChild(titleColumnData);
+      main.appendChild(summaryColumnData);
       main.appendChild(noteColumnData);
       tbodyElement.appendChild(main);
     }
@@ -145,32 +168,41 @@ import { useDate } from './util/dateUtil';
       table.removeChild(table.lastChild);
     }
     document.getElementById('table')!.appendChild(tableElement);
-  }
+  };
 
+  createHTML();
+
+  // 認証フローを実行
+  auth();
+
+  // 初回実行時にカレンダーAPIを実行
   chrome.runtime.sendMessage({ type: 'FETCH_CALENDAR' });
 
+  // 1分間隔でカレンダーAPIをバックグラウンドで実行するアラームを設定
   chrome.alarms.create('FETCH_CALENDAR', {
     delayInMinutes: 1,
     periodInMinutes: 1,
   });
 
+  // 1分間隔でカレンダーAPIをバックグラウンドで実行
   chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name == 'FETCH_CALENDAR') {
       chrome.runtime.sendMessage({ type: 'FETCH_CALENDAR' });
     }
   });
 
+  // バックグラウンドで書き換えられたカレンダーの状態を監視
   chrome.storage.onChanged.addListener(() => {
     createCalendarTable();
   });
 
+  // リロードボタンの押下を検知
   document.getElementById('reload')!.addEventListener('click', async () => {
     chrome.runtime.sendMessage({ type: 'FETCH_CALENDAR' });
   });
 
   window.onload = () => {
-    auth();
-    //1分ごとに関数を実行
+    // 1秒ごとに関数を実行
     setInterval(writeTime, 1000);
   };
 })();

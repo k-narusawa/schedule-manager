@@ -1,0 +1,17 @@
+{
+  "header_subject": {
+    "message": "List of Today's Schedule"
+  },
+  "main_next_appointment": {
+    "message": "Next Appointment : "
+  },
+  "table_header_summary": {
+    "message": "SUMMARY"
+  },
+  "table_header_start": {
+    "message": "START"
+  },
+  "table_header_note": {
+    "message": "NOTE"
+  }
+}

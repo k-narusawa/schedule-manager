@@ -1,0 +1,17 @@
+{
+  "header_subject": {
+    "message": "本日の予定一覧"
+  },
+  "main_next_appointment": {
+    "message": "次の予定 : "
+  },
+  "table_header_summary": {
+    "message": "タイトル"
+  },
+  "table_header_start": {
+    "message": "開始時刻"
+  },
+  "table_header_note": {
+    "message": "備考"
+  }
+}
