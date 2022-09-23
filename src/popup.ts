@@ -192,10 +192,8 @@ import { calendarApiResponseItem } from './types';
   });
 
   // バックグラウンドで書き換えられたカレンダーの状態を監視
-  chrome.storage.onChanged.addListener((changes: any, areaName: string) => {
-    if (changes.items) {
-      createCalendarTable();
-    }
+  chrome.storage.onChanged.addListener(() => {
+    createCalendarTable();
   });
 
   // リロードボタンの押下を検知
