@@ -4,13 +4,23 @@
     <meta charset="UTF-8" />
     <title>Schedule Watcher</title>
     <link rel="stylesheet" href="popup.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
   <body>
-    <h1>本日の予定一覧</h1>
-    <p>次の予定まで<span id="real-time"></span></p>
-    <p><span id="accessToken"></span></p>
-    <div id="table"></div>
-    <button type="button" id="btn">ボタン</button>
+    <header>
+      <div class="header-wrapper">
+        <div class="subject">
+          <p>本日の予定一覧</p>
+        </div>
+        <ul class="navi">
+          <li><a id="reload"><span class="material-icons">cached</span></a></li>
+        </ul>
+      </div>
+    </header>
+    <main>
+      <p>次の予定: <span id="real-time"></span></p>
+      <div id="table" class="table"></div>
+    </main>
     <script src="popup.js"></script>
   </body>
 </html>

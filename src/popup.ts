@@ -134,16 +134,16 @@ import { useDate } from './util/dateUtil';
     document.getElementById('table')!.appendChild(tableElement);
   }
 
-  chrome.runtime.sendMessage({ type: 'FETCH_CALENDAR' }, (response) => {});
+  chrome.runtime.sendMessage({ type: 'FETCH_CALENDAR' });
 
   chrome.alarms.create('FETCH_CALENDAR', {
     delayInMinutes: 1,
     periodInMinutes: 1,
   });
 
-  chrome.alarms.onAlarm.addListener(function (alarm) {
+  chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name == 'FETCH_CALENDAR') {
-      chrome.runtime.sendMessage({ type: 'FETCH_CALENDAR' }, (response) => {});
+      chrome.runtime.sendMessage({ type: 'FETCH_CALENDAR' });
     }
   });
 
@@ -151,18 +151,12 @@ import { useDate } from './util/dateUtil';
     createCalendarTable();
   });
 
-  document.getElementById('btn')!.addEventListener('click', async () => {
-    chrome.storage.local.get('accessToken', (items) => {
-      document.getElementById(
-        `accessToken`
-      )!.innerHTML = `Bearer ${items.accessToken}`;
-    });
+  document.getElementById('reload')!.addEventListener('click', async () => {
+    chrome.runtime.sendMessage({ type: 'FETCH_CALENDAR' });
   });
 
   window.onload = () => {
-    writeTime();
     auth();
-    // createCalendarTable();
     //1分ごとに関数を実行
     setInterval(writeTime, 1000);
   };
