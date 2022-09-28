@@ -20,7 +20,7 @@ npm run watch
 
 ## 拡張機能の読み込み
 
-- [Chrome 拡張機能](chrome://extensions)からデベロッパーモードにし`てパッケージ化されていない買う超機能を読み込む`で成果物(`build`フォルダ配下)を選択することによって動作を確認できる
+- [Chrome 拡張機能](chrome://extensions)からデベロッパーモードにして`パッケージ化されていない拡張機能を読み込む`で成果物(`build`フォルダ配下)を選択することによって動作を確認できる
 
 ## 機能
 
@@ -28,7 +28,7 @@ npm run watch
 
 ## インストール
 
-[**Chrome**extension]() <!-- TODO: Add chrome extension link inside parenthesis -->
+[Schedule Manager For Google Calendar](https://chrome.google.com/webstore/detail/schedule-manager-for-goog/ookamobccikmokomnncjfngnmfhkohdc?hl=ja&authuser=2)
 
 ## Contribution
 
