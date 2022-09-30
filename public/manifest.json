@@ -9,6 +9,10 @@
     "48": "icons/icon_48.png",
     "128": "icons/icon_128.png"
   },
+  "oauth2": {
+    "client_id": "dummy",
+    "scopes":["https://www.googleapis.com/auth/calendar.readonly"]
+  },
   "background": {
     "service_worker": "background.js"
   },
