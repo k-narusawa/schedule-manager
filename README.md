@@ -1,5 +1,9 @@
 # Schedule Manager
 
+## 概要
+
+- 新バージョン : [schedule-manager-v2](https://github.com/k-narusawa/schedule-manager-v2)
+
 ## install
 
 ```sh
